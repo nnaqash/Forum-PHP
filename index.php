@@ -14,47 +14,66 @@
 
 <body>
   <?php include 'components/_header.php' ?>
+  <?php include 'components/_conn.php' ?>
   <!-- carasouel -->
   <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
-  <div class="carousel-indicators">
-    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
-  </div>
-  <div class="carousel-inner">
-    <div class="carousel-item active">
-      <img src="https://source.unsplash.com/1600x500/?coding,HTML" class="d-block w-100" alt="...">
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
     </div>
-    <div class="carousel-item">
-      <img src="https://source.unsplash.com/1600x500/?AI,hacking" class="d-block w-100" alt="...">
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img src="https://source.unsplash.com/1600x500/?coding,HTML" class="d-block w-100" alt="...">
+      </div>
+      <div class="carousel-item">
+        <img src="https://source.unsplash.com/1600x500/?robots,hacking" class="d-block w-100" alt="...">
+      </div>
+      <div class="carousel-item">
+        <img src="https://source.unsplash.com/1600x500/?database,coding" class="d-block w-100" alt="...">
+      </div>
     </div>
-    <div class="carousel-item">
-      <img src="https://source.unsplash.com/1600x500/?database,coding" class="d-block w-100" alt="...">
-    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
   </div>
-  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Previous</span>
-  </button>
-  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Next</span>
-  </button>
-  </div>
+  <!-- fetch categories -->
+
+
+  <!-- category container -->
   <div class="container my-3">
     <h2 class="text-center">Browse Categories</h2>
     <div class="row">
-      <!-- using forloop to iterate through categories -->
-      <div class="col-md-4 my-2">
+      <!-- using loop to iterate through categories -->
+      <?php
+      $sql = "SELECT * FROM `categories`";
+      $result = mysqli_query($conn, $sql);
+      while ($row = mysqli_fetch_assoc($result)) {
+        $id=$row['category_id'];
+        // echo $row['category_name'];
+        $des= $row['category_description'];
+        $cat = $row['category_name'];
+        // other way of serving images locally
+        /* <img src="images/code-'.$id. '.jpg" class="card-img-top" alt="...">
+         */
+        echo '<div class="col-md-4 my-2">
         <div class="card " style="width: 18rem;">
-          <img src="https://source.unsplash.com/600x500/?code,python" class="card-img-top" alt="...">
+          <img src="https://source.unsplash.com/600x500/? '.$cat.',programming,HTML" class="card-img-top" alt="...">
             <div class="card-body ">
-              <h5 class="card-title">Card title</h5>
-              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-              <a href="#" class="btn btn-primary">View Threads</a>
+              <h5 class="card-title"> <a href="threadList.php?catid='.$id.'">'.$cat.'</a></h5>
+              <p class="card-text">'.substr($des,0,120).'...</p>
+              <a href="threadList.php?catid='.$id.'" class="btn btn-primary">View Threads</a>
             </div>
         </div>
-      </div>
+      </div>';
+      }
+      ?>
+
     </div>
   </div>
   <?php include 'components/_footer.php' ?>
