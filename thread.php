@@ -15,103 +15,88 @@
 <body>
     <?php include 'components/_header.php' ?>
     <?php include 'components/_conn.php' ?>
-
+    
     <?php
     // the nema of the cat id that was passed in the url fetching that using get
-    $id = $_GET['catid'];
-    $sql = "SELECT * FROM `categories` WHERE category_id=$id";
-    $result = mysqli_query($conn, $sql);
-    while ($row = mysqli_fetch_assoc($result)) {
-        $catname = $row['category_name'];
-        $catdesc = $row['category_description'];
+    $id = $_GET['threadid'];
+    $sql ="SELECT * FROM `threads` WHERE thread_id=$id";
+    $result= mysqli_query($conn,$sql);
+    $noresult= true;
+    while($row =mysqli_fetch_assoc($result)){
+        $noresult=false;
+        $title=$row['thread_title'];
+        $desc=$row['thread_desc'];
     }
-    ?>
-
-    <?php
-        $showAlert = false;
-        $method =$_SERVER['REQUEST_METHOD'];
-        if($method=='POST'){
-            $th_title= $_POST['title']; // value of name attribute from the form
-            $th_desc = $_POST['desc']; // value of name attribute from the form
-            // sql query, inserting into db
-            $sql="INSERT INTO `threads` (`thread_title`, `thread_desc`, `thread_cat_id`, `thread_user_id`, `timestamp`) VALUES ( '$th_title', '$th_desc', '$id', '0', current_timestamp())";
-            //saving the result of sql
-            $result = mysqli_query($conn,$sql);
-            $showAlert = true;
-            if($showAlert){
-                echo'<div class="alert alert-success alert-dismissible fade show" role="alert">                
-                <strong>Question Successfully Submitted!</strong> Your Question has been added, please wait while someone answers your question
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>';
-            }
-        }
+    if ($noresult) {
+        echo '<div class="container my-3 bg-light">
+                        <div class="container-fluid py-5">                                
+                            <h3 class="fw-bold">No Discussions Found</h3>
+                            <p class="lead"> Be the first one to start the discussion</p>                                                                
+                        </div>
+            </div>';
+    }
     ?>
 
     <!-- Custom jumbotorn container -->
     <div class="container my-3 bg-light">
         <div class="container-fluid py-5">
-
-            <h1 class="display-5 fw-bold">Welcome to <?php echo $catname ?> forums</h1>
-            <p class="lead"> <?php echo $catdesc ?></p>
-            <hr class="my-4">
+            
+            <h1 class="display-5 fw-bold"> <?php echo $title?></h1>
+            <p class="lead"> <?php echo $desc ?></p>
+            <hr class = "my-4">
             <p>This forum is for sharing knowledge with each other and helping each other solve problems.</p>
-            <ul>
+             <ul>
                 <li>No Spam / Advertising / Self-promote in the forums.</li>
                 <li>Do not post copyright-infringing material.</li>
                 <li>Do not cross post questions.</li>
                 <li>Do not post “offensive” posts, links or images.</li>
-                <li>Remain respectful of other members at all times.</li>
+                <li>Remain respectful of other members at all times.</li>                
             </ul>
-            <a class="btn btn-success btn-lg" href="#" role="button"> Learn More</a>
+            <hr class = "my-4">
+            <p class="fw-bold">Posted by:</p>
         </div>
     </div>
 
-    <!-- form to start discussion -->
-    <!-- submitting the form on its self -->
-        
     <div class="container">
-        <h1>Ask a Question</h1>
+        <h1>Post a comment</h1>
         <form action="<?php echo $_SERVER['REQUEST_URI']?>" method="Post">
             <div class="mb-3">
-                <label for="exampleFormControlInput1" class="form-label">Title</label>
-                <input type="Text" class="form-control" id="title" name="title" placeholder="Name of Problem">
-                <small class="form-text text-muted">Keep the title consise</small>
-            </div>
-            <div class="mb-3">
-                <label for="exampleFormControlTextarea1" class="form-label">Descriptipn of the problem</label>
-                <textarea class="form-control" id="exampleFormControlTextarea1" id="desc" name="desc" rows="3"></textarea>
+                <label for="exampleFormControlTextarea1" class="form-label">Type Your Comment</label>
+                <textarea class="form-control" id="exampleFormControlTextarea1" id="comment" name="comment" rows="3"></textarea>
                 <small class="form-text text-muted">Give as much detail as possible</small>
             </div>
 
-            <button type="submit" class="btn btn-success mb-3">Start Discussion +</button>
+            <button type="submit" class="btn btn-success mb-3">Post Comment</button>
         </form>
     </div>
-    
-   
+
+    <!-- displaying the comments -->
     <div class="container">
         
         <?php
-        // the nema of the cat id that was passed in the url fetching that using get
-        $id = $_GET['catid'];
-        $sql = "SELECT * FROM `threads` WHERE thread_cat_id=$id";
+        // getting the thread id to which the comment corresponds to
+        $id = $_GET['threadid'];
+        // fetching from the db
+        $sql = "SELECT * FROM `comments` WHERE thread_id=$id";
+        // storing the query results
         $result = mysqli_query($conn, $sql);
-        $noresult = true;
+        $noresult = true; // if there is no results then
 
+        // getting the results in the form of an assoc array
         while ($row = mysqli_fetch_assoc($result)) {
             $noresult = false;
-            $title = $row['thread_title'];
-            $desc = $row['thread_desc'];
-            $id = $row['thread_id'];
+            $id= $row['comment_id'];
+            $content = $row['comment_content'];
+            //$id = $row['thread_id'];
 
-            echo '<div class="d-flex flex-column">
+            echo'<div class="d-flex flex-column">
                             <div class="flex-column">
                                 <img  class="rounded-circle "src="images/676-6764065_default-profile-picture-transparent-hd-png-download.png " alt="user default image" width="40px" height="35px">      
                             </div>
-                            <h5> <a class ="text-dark text-decoration-none"href ="thread.php?threadid=' . $id . '"> ' . $title . '</a></h5>
                             <div class="flex-column">
-                            ' . $desc . '
+                            ' . $content . '
                             </div>                            
-                        </div>';
+                </div>';
         }
         if ($noresult) {
             echo '<div class="container my-3 bg-light">
@@ -125,8 +110,35 @@
 
     </div>
 
+    <div class="container mt-3">
+        <h1>Discussion</h1>
+            <?php
+                // the nema of the cat id that was passed in the url fetching that using get
+               /*  $id = $_GET[''];
+                $sql ="SELECT * FROM `threads` WHERE thread_cat_id=$id";
+                $result= mysqli_query($conn,$sql);
+                
+                while($row =mysqli_fetch_assoc($result))
+                {
+                    $title=$row['thread_title'];
+                    $desc=$row['thread_desc'];
+                    $id=$row['thread_id'];
+              
+                    echo'<div class="d-flex flex-column">
+                            <div class="flex-column">
+                                <img  class="rounded-circle "src="images/676-6764065_default-profile-picture-transparent-hd-png-download.png " alt="user default image" width="40px" height="35px">      
+                            </div>
+                            <h5> <a class ="text-dark text-decoration-none"href ="threadList.php"> '.$title.'</a></h5>
+                            <div class="flex-column">
+                            '.$desc.'
+                            </div>                            
+                        </div>';
+                } */
+            ?>
+    </div>
+             
 
-
+    <?php include 'components/_footer.php' ?>
     <!-- Optional JavaScript; choose one of the two! -->
 
     <!-- Option 1: Bootstrap Bundle with Popper -->
@@ -139,6 +151,5 @@
     -->
 
 </body>
-<?php include 'components/_footer.php' ?>
 
 </html>
