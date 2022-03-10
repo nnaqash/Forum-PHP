@@ -15,17 +15,17 @@
 <body>
     <?php include 'components/_header.php' ?>
     <?php include 'components/_conn.php' ?>
-    
+
     <?php
     // the nema of the cat id that was passed in the url fetching that using get
     $id = $_GET['threadid'];
-    $sql ="SELECT * FROM `threads` WHERE thread_id=$id";
-    $result= mysqli_query($conn,$sql);
-    $noresult= true;
-    while($row =mysqli_fetch_assoc($result)){
-        $noresult=false;
-        $title=$row['thread_title'];
-        $desc=$row['thread_desc'];
+    $sql = "SELECT * FROM `threads` WHERE thread_id=$id";
+    $result = mysqli_query($conn, $sql);
+    $noresult = true;
+    while ($row = mysqli_fetch_assoc($result)) {
+        $noresult = false;
+        $title = $row['thread_title'];
+        $desc = $row['thread_desc'];
     }
     if ($noresult) {
         echo '<div class="container my-3 bg-light">
@@ -36,30 +36,54 @@
             </div>';
     }
     ?>
+    <!-- php script to add comments in to the database -->
+    <?php
+    $showAlert = false;
+    $method = $_SERVER['REQUEST_METHOD'];
+    if ($method == 'POST') {
+        //insert into comment table
+        $comment = $_POST['comment']; // value of name attribute from the form
+
+        // sql query, inserting into db
+        $sql = "INSERT INTO `comments` (`comment_content`, `thread_id`, `comment_by`, `comment_time`) VALUES ('$comment', '$id', '0', current_timestamp())";
+        //saving the result of sql
+        $result = mysqli_query($conn, $sql);
+        $showAlert = true;
+        if ($showAlert) {
+            echo '<div class="alert alert-success alert-dismissible fade show" role="alert">                
+                    <strong>Question Successfully Submitted!</strong> Your comment has been added.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>';
+        }
+    }
+    ?>
+
+ 
+
 
     <!-- Custom jumbotorn container -->
     <div class="container my-3 bg-light">
         <div class="container-fluid py-5">
-            
-            <h1 class="display-5 fw-bold"> <?php echo $title?></h1>
+
+            <h1 class="display-5 fw-bold"> <?php echo $title ?></h1>
             <p class="lead"> <?php echo $desc ?></p>
-            <hr class = "my-4">
+            <hr class="my-4">
             <p>This forum is for sharing knowledge with each other and helping each other solve problems.</p>
-             <ul>
+            <ul>
                 <li>No Spam / Advertising / Self-promote in the forums.</li>
                 <li>Do not post copyright-infringing material.</li>
                 <li>Do not cross post questions.</li>
                 <li>Do not post “offensive” posts, links or images.</li>
-                <li>Remain respectful of other members at all times.</li>                
+                <li>Remain respectful of other members at all times.</li>
             </ul>
-            <hr class = "my-4">
+            <hr class="my-4">
             <p class="fw-bold">Posted by:</p>
         </div>
     </div>
 
     <div class="container">
         <h1>Post a comment</h1>
-        <form action="<?php echo $_SERVER['REQUEST_URI']?>" method="Post">
+        <form action="<?php echo $_SERVER['REQUEST_URI'] ?>" method="Post">
             <div class="mb-3">
                 <label for="exampleFormControlTextarea1" class="form-label">Type Your Comment</label>
                 <textarea class="form-control" id="exampleFormControlTextarea1" id="comment" name="comment" rows="3"></textarea>
@@ -70,9 +94,11 @@
         </form>
     </div>
 
+    <div></div>
+
     <!-- displaying the comments -->
     <div class="container">
-        
+
         <?php
         // getting the thread id to which the comment corresponds to
         $id = $_GET['threadid'];
@@ -83,20 +109,22 @@
         $noresult = true; // if there is no results then
 
         // getting the results in the form of an assoc array
-        while ($row = mysqli_fetch_assoc($result)) {
+        while ($row = mysqli_fetch_assoc($result)) 
+        {
             $noresult = false;
-            $id= $row['comment_id'];
+            $id = $row['comment_id'];
             $content = $row['comment_content'];
+            $comment_time= $row['comment_time'];
             //$id = $row['thread_id'];
 
-            echo'<div class="d-flex flex-column">
-                            <div class="flex-column">
-                                <img  class="rounded-circle "src="images/676-6764065_default-profile-picture-transparent-hd-png-download.png " alt="user default image" width="40px" height="35px">      
-                            </div>
-                            <div class="flex-column">
-                            ' . $content . '
-                            </div>                            
-                </div>';
+            echo ' <div class="d-flex flex-row">
+            <div class="p-2 bd-highlight"> <img class="rounded-circle " src="images/676-6764065_default-profile-picture-transparent-hd-png-download.png " alt="user default image" width="40px" height="35px"></div>
+            <div class="p-2 bd-highlight"><p class="fw-bold text-start"> Anonymus User </p></div>
+            <div class="p-2"><small class="text-muted">Posted at: '.$comment_time.'</small></div>
+
+            </div>
+            <div class="p-3 mb-2 bg-light text-dark border-success rounded-pill">' . $content . '</div>            
+            ';
         }
         if ($noresult) {
             echo '<div class="container my-3 bg-light">
@@ -112,9 +140,9 @@
 
     <div class="container mt-3">
         <h1>Discussion</h1>
-            <?php
-                // the nema of the cat id that was passed in the url fetching that using get
-               /*  $id = $_GET[''];
+        <?php
+        // the nema of the cat id that was passed in the url fetching that using get
+        /*  $id = $_GET[''];
                 $sql ="SELECT * FROM `threads` WHERE thread_cat_id=$id";
                 $result= mysqli_query($conn,$sql);
                 
@@ -134,9 +162,9 @@
                             </div>                            
                         </div>';
                 } */
-            ?>
+        ?>
     </div>
-             
+
 
     <?php include 'components/_footer.php' ?>
     <!-- Optional JavaScript; choose one of the two! -->
