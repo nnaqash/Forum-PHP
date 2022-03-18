@@ -78,19 +78,19 @@
 
 <!-- alert message to showcase successful signup -->
 <?php
-        if($showalert)
-            {    
-            echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
-            <strong>SignUp Successful!</strong> Your account has been created successfully, You can now Login!
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>';
-            }
-            // alert message for not succesful signup
-            if($showerror)
-            {    
-            echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <strong>Error!</strong> '. $showerror.'
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>';
-            }
-    ?>
+    if($showalert)
+        {    
+        echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>SignUp Successful!</strong> Your account has been created successfully, You can now Login!
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>';
+        }
+        // alert message for not succesful signup
+    if($showerror)
+        {    
+        echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>Error!</strong> '. $showerror.'
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>';
+    }
+?>

@@ -68,24 +68,33 @@
 
     <!-- form to start discussion -->
     <!-- submitting the form on its self -->
-        
-    <div class="container">
-        <h1>Ask a Question</h1>
-        <form action="<?php echo $_SERVER['REQUEST_URI']?>" method="Post">
-            <div class="mb-3">
-                <label for="exampleFormControlInput1" class="form-label">Title</label>
-                <input type="Text" class="form-control" id="title" name="title" placeholder="Name of Problem">
-                <small class="form-text text-muted">Keep the title consise</small>
-            </div>
-            <div class="mb-3">
-                <label for="exampleFormControlTextarea1" class="form-label">Descriptipn of the problem</label>
-                <textarea class="form-control" id="exampleFormControlTextarea1" id="desc" name="desc" rows="3"></textarea>
-                <small class="form-text text-muted">Give as much detail as possible</small>
-            </div>
+    <?php
+        if(isset($_SESSION['loggedin']) && $_SESSION['loggedin']==true){
+            echo'<div class="container">
+            <h1>Ask a Question</h1>
+            <form action="'. $_SERVER["REQUEST_URI"] .'>" method="Post">
+                <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">Title</label>
+                    <input type="Text" class="form-control" id="title" name="title" placeholder="Name of Problem">
+                    <small class="form-text text-muted">Keep the title consise</small>
+                </div>
+                <div class="mb-3">
+                    <label for="exampleFormControlTextarea1" class="form-label">Descriptipn of the problem</label>
+                    <textarea class="form-control" id="exampleFormControlTextarea1" id="desc" name="desc" rows="3"></textarea>
+                    <small class="form-text text-muted">Give as much detail as possible</small>
+                </div>
 
-            <button type="submit" class="btn btn-success mb-3">Start Discussion +</button>
-        </form>
-    </div>
+                <button type="submit" class="btn btn-success mb-3">Start Discussion +</button>
+            </form>
+        </div>';
+        } else{
+            echo'<div class="container">
+            <p class="fs-3 fw-bold">Login to start a discussion</p>
+            </div>';
+        }    
+        
+    ?>
+
     
    
     <div class="container">

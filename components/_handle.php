@@ -16,19 +16,20 @@
         if($num==1){
             $row = mysqli_fetch_assoc($result);
             if(password_verify($pass, $row['password'])){
-                echo"loggedin";
+                //echo"loggedin";
                 $login=true;
                 session_start();
                 $_SESSION['loggedin']=true;
-                $_SESSION['email']=$email;
+                $_SESSION['email']=$email;            
+   
+                header("Location:/PHP-FORUM/index.php");
                 
-                
-                header("Location: /PHP-FORUM/index.php");
+               
             } else{
                 $showerror="invalid username or password";
             }
 
-        }
+        }header("Location:/PHP-FORUM/index.php");
     }
     
 ?>

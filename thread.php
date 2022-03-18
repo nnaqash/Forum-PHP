@@ -81,20 +81,30 @@
         </div>
     </div>
 
-    <div class="container">
-        <h1>Post a comment</h1>
-        <form action="<?php echo $_SERVER['REQUEST_URI'] ?>" method="Post">
-            <div class="mb-3">
-                <label for="exampleFormControlTextarea1" class="form-label">Type Your Comment</label>
-                <textarea class="form-control" id="exampleFormControlTextarea1" id="comment" name="comment" rows="3"></textarea>
-                <small class="form-text text-muted">Give as much detail as possible</small>
-            </div>
+    <!-- adding comments -->
+    <?php
+        if(isset($_SESSION['loggedin']) && $_SESSION['loggedin']==true){
+            echo' <div class="container">
+            <h1>Post a comment</h1>
+            <form action="'. $_SERVER['REQUEST_URI'] .'" method="Post">
+                <div class="mb-3">
+                    <label for="exampleFormControlTextarea1" class="form-label">Type Your Comment</label>
+                    <textarea class="form-control" id="exampleFormControlTextarea1" id="comment" name="comment" rows="3"></textarea>
+                    <small class="form-text text-muted">Give as much detail as possible</small>
+                </div>
+                <button type="submit" class="btn btn-success mb-3">Post Comment</button>
+            </form>
+        </div>';
+        } else{
+            echo'<div class="container">
+            <h1> Post a comment</h1>
+            <p class="fs-5 text-muted">Login to start a discussion</p>
+            </div>';
+        }    
+        
+    ?> 
 
-            <button type="submit" class="btn btn-success mb-3">Post Comment</button>
-        </form>
-    </div>
 
-    <div></div>
 
     <!-- displaying the comments -->
     <div class="container">
@@ -139,7 +149,7 @@
     </div>
 
     <div class="container mt-3">
-        <h1>Discussion</h1>
+        
         <?php
         // the nema of the cat id that was passed in the url fetching that using get
         /*  $id = $_GET[''];
